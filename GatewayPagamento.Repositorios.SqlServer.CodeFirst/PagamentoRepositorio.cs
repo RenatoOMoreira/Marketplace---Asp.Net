@@ -2,10 +2,9 @@
 using GetawayPagamento.Dominio.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GatewayPagamento.Repositorios.SqlServer.CodeFirst
 {
@@ -33,7 +32,14 @@ namespace GatewayPagamento.Repositorios.SqlServer.CodeFirst
 
         public List<Pagamento> Selecionar(string numeroCartao)
         {
-            throw new NotImplementedException();
+            using (var contexto = new GatewayPagamentoDbContext())
+            {
+                return contexto.Pagamentos
+                    //.Include(Cartao)
+                    .Include(p => p.Cartao)
+                    .Where(p => p.Cartao.NumeroCartao == numeroCartao)
+                    .ToList();
+            }
         }
     }
 }
