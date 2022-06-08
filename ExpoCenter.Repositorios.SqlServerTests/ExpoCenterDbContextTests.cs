@@ -44,5 +44,38 @@ namespace ExpoCenter.Repositorios.SqlServer.Tests
             dbContext.Eventos.Add(evento);
             dbContext.SaveChanges();
         }
+
+        [TestMethod]
+        public void InserirParticipanteTeste()
+        {
+            Participante participante = new();
+            participante.Cpf = "12345678910";
+            participante.Email = "renato@gmail.com";
+            participante.DataNascimento = Convert.ToDateTime("29/12/1992");
+            participante.Nome = "Renato";
+
+            participante.Eventos = new List<Evento>()
+            {
+               //dbContext.Eventos.Find()
+                dbContext.Eventos.Single(e => e.Descricao == "Copa do mundo Fifa")
+            };
+
+            dbContext.Participantes.Add(participante);
+            dbContext.SaveChanges();
+
+            foreach (var evento in participante.Eventos) 
+            {
+                Console.WriteLine(evento.Descricao);
+            }
+        }
+
+        [TestMethod]
+        public void SelecionarParticipantesTeste()
+        {
+            foreach (var participante in dbContext.Participantes)
+            {
+                Console.WriteLine(participante.Nome);
+            }
+        }
     }
 }
