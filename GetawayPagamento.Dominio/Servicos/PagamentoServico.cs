@@ -18,31 +18,34 @@ namespace GetawayPagamento.Dominio.Servicos
             this.pagamentoRepositorio = pagamentoRepositorio;
             this.cartaoRepositorio = cartaoRepositorio;
         }
-        public StatusPagamento Inserir(Pagamento pagamento) 
+        public void Inserir(Pagamento pagamento) 
         {
             var cartao = cartaoRepositorio.Selecionar(pagamento.Cartao.NumeroCartao);
 
             if (cartao == null) 
             {
-                return StatusPagamento.CartaoInexistente;
+                pagamento.Status = StatusPagamento.CartaoInexistente;
             }
 
             var pagamentoExistente = pagamentoRepositorio.Selecionar(p => p.NumeroPedido == pagamento.NumeroPedido);
 
             if (pagamentoExistente.Any()) 
             {
-                return StatusPagamento.PedidoJaPago;
+                pagamento.Status = StatusPagamento.PedidoJaPago;
             }
 
-            if (pagamento.Valor > cartao.LimiteCartao) 
+            if (pagamento.Valor > cartao?.LimiteCartao) 
             {
-                return StatusPagamento.SaldoIdisponivel;
+                pagamento.Status = StatusPagamento.SaldoIdisponivel;
             }
-            pagamento.Status = StatusPagamento.PagamentoOk;
+            if (pagamento.Status == StatusPagamento.NaoDefinido)
+            {
+                pagamento.Status = StatusPagamento.PagamentoOk;
 
-            pagamentoRepositorio.Inserir(pagamento);
+                pagamentoRepositorio.Inserir(pagamento); 
+            }
 
-            return StatusPagamento.PagamentoOk;
+           
         }
     }
 }

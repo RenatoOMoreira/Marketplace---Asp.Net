@@ -25,6 +25,7 @@ namespace GatewayPagamento.Repositorios.SqlServer.CodeFirst
             using (var contexto = new GatewayPagamentoDbContext())
             {
                 return contexto.Pagamentos
+                    .Include(p => p.Cartao)
                     .Where(condicao)
                     .ToList();
             }
