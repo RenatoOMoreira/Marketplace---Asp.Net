@@ -50,6 +50,7 @@
             </td>
             <td>
                 @Html.ActionLink("Editar", "Edit", new {  id=item.Id  }) |
+                @Html.ActionLink("Participantes", "Participantes", new { eventoId=item.Id }) |
                 @Html.ActionLink("Detalhes", "Details", new { id=item.Id }) |
                 @Html.ActionLink("Deletar", "Delete", new { id=item.Id })
             </td>
