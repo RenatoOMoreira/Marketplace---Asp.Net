@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using ExpoCenter.Mvc.Helpers;
 using ExpoCenter.Mvc.Models;
 using ExpoCenter.Repositorios.SqlServer;
 using ExpoCenterDominio.Entidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,8 @@ using System.Linq;
 
 namespace ExpoCenter.Mvc.Controllers
 {
+     [AuthorizeAttribute(Roles ="Administrador, Gerente")]
+   
     public class ParticipantesController : Controller
     {
         private readonly ExpoCenterDbContext dbContext;
@@ -81,6 +85,7 @@ namespace ExpoCenter.Mvc.Controllers
         }
 
         // GET: ParticipantesController/Edit/5
+        [AuthorizeRole(PerfilUsuario.Administrador, PerfilUsuario.Gerente)]
         public ActionResult Edit(int id)
         {
             //var participante = dbContext.Participantes.Include(p => p.Eventos).SingleOrDefault(p => p.Id == id);
@@ -159,6 +164,10 @@ namespace ExpoCenter.Mvc.Controllers
         // GET: ParticipantesController/Delete/5
         public ActionResult Delete(int id)
         {
+            if (!User.HasClaim("Participantes","Excluir"))
+            {
+                return new ForbidResult();
+            }
             return View();
         }
 
