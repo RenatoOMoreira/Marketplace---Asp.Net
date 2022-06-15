@@ -1,5 +1,6 @@
 using ExpoCenter.Mvc.Data;
 using ExpoCenter.Repositorios.SqlServer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultUI();
+
+builder.Services.AddAuthorization(o => o.AddPolicy("ParticipantesExcluir",ParticipantesExcluirPolicy));
+
+void ParticipantesExcluirPolicy(AuthorizationPolicyBuilder builder)
+{
+    builder.RequireAssertion(h => h.User.IsInRole("Gerente") || h.User.HasClaim("Participantes","Excluir"));
+}
 
 builder.Services.AddControllersWithViews();
 
