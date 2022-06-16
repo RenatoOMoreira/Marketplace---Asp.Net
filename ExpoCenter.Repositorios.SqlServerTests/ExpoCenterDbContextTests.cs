@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ExpoCenter.Repositorios.SqlServer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -76,6 +70,18 @@ namespace ExpoCenter.Repositorios.SqlServer.Tests
             {
                 Console.WriteLine(participante.Nome);
             }
+        }
+        [TestMethod]
+        public void InserirPagamentoTeste()
+        {
+            var pagamento = new Pagamento();
+
+            pagamento.IdCartao = Guid.NewGuid();
+            pagamento.IdProduto = Guid.NewGuid();
+            pagamento.Valor = 19.52m;
+
+            dbContext.Add(pagamento);
+            dbContext.SaveChanges();
         }
     }
 }
