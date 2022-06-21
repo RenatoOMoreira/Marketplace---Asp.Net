@@ -1,5 +1,7 @@
 using ExpoCenter.Mvc.Data;
+using ExpoCenter.Repositorios.Http;
 using ExpoCenter.Repositorios.SqlServer;
+using ExpoCenterDominio.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,10 @@ void ParticipantesExcluirPolicy(AuthorizationPolicyBuilder builder)
 builder.Services.AddControllersWithViews();
 
 builder.Logging.AddLog4Net("log4net.config");
+
+builder.Services.AddHttpClient<IPagamentoRepositorio, PagamentoRepositorio>(c => { c.BaseAddress = new Uri(builder.Configuration.GetSection("Endpoints:ApiExpoCenter").Value.TrimEnd('/')+"/"); 
+
+});
 
 
 var app = builder.Build();
